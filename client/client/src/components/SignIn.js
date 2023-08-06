@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import axios from "axios";
 
-const SignIn = () => {
+const SignIn = ({ handleSignIn }) => {
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
 
-  const [loginSuccess, setLoginSuccess] = useState(false); // New state for login success
+  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const handleChange = (e) => {
     setCredentials({
@@ -16,29 +15,37 @@ const SignIn = () => {
     });
   };
 
-  const handleSignIn = (e) => {
+  const handleSignInSubmit = (e) => {
     e.preventDefault();
-
-    // Send a POST request to the backend to handle sign-in
-    axios
-      .post("/auth/login", credentials)
-      .then((response) => {
-        console.log(response.data.token);
-        // Handle successful sign-in
-        localStorage.setItem("authToken", response.data.token);
-        setLoginSuccess(true);
-      })
-      .catch((error) => {
-        console.error("Error signing in:", error);
-      });
+    handleSignIn(credentials); // Call the parent component's handleSignIn function
+    // For simplicity, assume the handleSignIn function handles API calls and login success/failure
+    setLoginSuccess(true); // Set loginSuccess to true (you can handle this based on API response)
   };
 
   return (
     <div>
       <h2>Sign In</h2>
-      {loginSuccess && <p>Login successful!</p>} {/* Display success message */}
-      <form onSubmit={handleSignIn}>
-        {/* ... form inputs and submit button ... */}
+      {loginSuccess && <p>Login successful!</p>}
+      <form onSubmit={handleSignInSubmit}>
+        <label>
+          Username:
+          <input
+            type="text"
+            name="username"
+            value={credentials.username}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Password:
+          <input
+            type="password"
+            name="password"
+            value={credentials.password}
+            onChange={handleChange}
+          />
+        </label>
+        <button type="submit">Sign In</button>
       </form>
     </div>
   );

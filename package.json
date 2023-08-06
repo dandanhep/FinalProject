@@ -14,10 +14,10 @@
     "bcrypt": "^5.1.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.4.1"
+    "mongoose": "^7.4.2"
   },
   "devDependencies": {
-    "jest": "^28.3.1",
+    "jest": "^28.0.0",
     "supertest": "^6.1.6"
   }
 }

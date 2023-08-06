@@ -1,18 +1,41 @@
 import React, { useState } from "react";
 import axios from "axios";
+import EditEventForm from "./EditEventForm";
+import CancelEventForm from "./CancelEventForm";
 
 const AdminPanel = () => {
-  const [eventData, setEventData] = useState({
-    name: "",
-    description: "",
-    imageUrl: "",
-  });
+  const [selectedEvent, setSelectedEvent] = useState(null);
+
+  // Function to handle selecting an event for editing or canceling
+  const handleEventSelection = (event) => {
+    setSelectedEvent(event);
+  };
 
   const handleChange = (e) => {
     setEventData({
       ...eventData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleAddEvent = (e) => {
+    e.preventDefault();
+
+    // Send a POST request to add a new event
+    axios
+      .post("/api/add-event", eventData)
+      .then((response) => {
+        console.log(response.data.message);
+        // Clear the form after successful addition
+        setEventData({
+          name: "",
+          description: "",
+          imageUrl: "",
+        });
+      })
+      .catch((error) => {
+        console.error("Error adding event:", error);
+      });
   };
 
   const handleEditEvent = (e, eventId) => {
@@ -78,15 +101,10 @@ const AdminPanel = () => {
       </form>
 
       {/* Edit Event Form */}
-      <h2>Edit Event</h2>
-
-      {/* On selecting an event, edit the form fields with its data */}
-      {/* Allow editing and handleEditEvent when form is submitted */}
+      {selectedEvent && <EditEventForm eventId={selectedEvent._id} />}
 
       {/* Cancel Event Form */}
-      <h2>Cancel Event</h2>
-
-      {/* On selecting an event, handleCancelEvent when form is submitted */}
+      {selectedEvent && <CancelEventForm eventId={selectedEvent._id} />}
     </div>
   );
 };

@@ -4,19 +4,17 @@ const app = express();
 const authRoutes = require("./routes/auth");
 const authenticateUser = require("./middleware");
 
-const DB_CONNECTION_STRING = "mongodb+srv://finalproject.s5nykoh.mongodb.net/";
-const DB_NAME = "FinalProject"; // database name
+const DB_CONNECTION_STRING =
+  "mongodb+srv://conferenceapp.yytqua6.mongodb.net/<conference_app>";
 const DB_USERNAME = "dhepburn97";
-const DB_PASSWORD = "aUmQmEURCwX9LZBV"; // database password
+const DB_PASSWORD = "7HTyqOzzZowNAXL6";
 
-// MongoDB connection options
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true, // to avoid deprecation warnings
+  //useCreateIndex: true,
   user: DB_USERNAME,
   pass: DB_PASSWORD,
-  dbName: DB_NAME,
 };
 
 // Connect to MongoDB Atlas
@@ -38,5 +36,5 @@ app.get("/protected-route", authenticateUser, (req, res) => {
 });
 
 // Start the server
-const port = 5000;
+const port = 5001;
 app.listen(port, () => console.log(`Server running on port ${port}`));
