@@ -2,9 +2,15 @@ import React, { useState } from "react";
 import axios from "axios";
 import EditEventForm from "./EditEventForm";
 import CancelEventForm from "./CancelEventForm";
+import AddEventForm from "./AddEventForm";
 
 const AdminPanel = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [eventData, setEventData] = useState({
+    name: "",
+    description: "",
+    imageUrl: "",
+  });
 
   // Function to handle selecting an event for editing or canceling
   const handleEventSelection = (event) => {
@@ -100,8 +106,16 @@ const AdminPanel = () => {
         <button type="submit">Add Event</button>
       </form>
 
+      {/* Add Event Form */}
+      <AddEventForm />
+
       {/* Edit Event Form */}
-      {selectedEvent && <EditEventForm eventId={selectedEvent._id} />}
+      {selectedEvent && (
+        <EditEventForm
+          eventId={selectedEvent._id}
+          setEventData={setEventData}
+        />
+      )}
 
       {/* Cancel Event Form */}
       {selectedEvent && <CancelEventForm eventId={selectedEvent._id} />}

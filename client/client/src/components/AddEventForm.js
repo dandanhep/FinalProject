@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const EditEventForm = ({ eventId, setEventData }) => {
-  const [eventData, setEventDataState] = useState({
-    // Changed variable name to setEventDataState
+const AddEventForm = () => {
+  const [eventData, setEventData] = useState({
     name: "",
     description: "",
     imageUrl: "",
@@ -16,24 +15,30 @@ const EditEventForm = ({ eventId, setEventData }) => {
     });
   };
 
-  const handleEditEvent = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Send a PUT request to edit an existing event
+    // Send a POST request to add a new event
     axios
-      .put(`/api/edit-event/${eventId}`, eventData)
+      .post("/api/add-event", eventData)
       .then((response) => {
         console.log(response.data.message);
+        // Clear the form after successful addition
+        setEventData({
+          name: "",
+          description: "",
+          imageUrl: "",
+        });
       })
       .catch((error) => {
-        console.error("Error editing event:", error);
+        console.error("Error adding event:", error);
       });
   };
 
   return (
     <div>
-      <h2>Edit Event</h2>
-      <form onSubmit={(e) => handleEditEvent(e, eventId)}>
+      <h2>Add Event</h2>
+      <form onSubmit={handleSubmit}>
         <label>
           Event Name:
           <input
@@ -61,10 +66,10 @@ const EditEventForm = ({ eventId, setEventData }) => {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Save Changes</button>
+        <button type="submit">Add Event</button>
       </form>
     </div>
   );
 };
 
-export default EditEventForm;
+export default AddEventForm;
