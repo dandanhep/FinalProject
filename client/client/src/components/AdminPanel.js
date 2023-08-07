@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import EditEventForm from "./EditEventForm";
 import CancelEventForm from "./CancelEventForm";
-import AddEventForm from "./AddEventForm";
 
 const AdminPanel = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -15,13 +14,6 @@ const AdminPanel = () => {
   // Function to handle selecting an event for editing or canceling
   const handleEventSelection = (event) => {
     setSelectedEvent(event);
-  };
-
-  const handleChange = (e) => {
-    setEventData({
-      ...eventData,
-      [e.target.name]: e.target.value,
-    });
   };
 
   const handleAddEvent = (e) => {
@@ -76,49 +68,27 @@ const AdminPanel = () => {
     <div>
       <h2>Add Event</h2>
       <form onSubmit={handleAddEvent}>
-        <label>
-          Event Name:
-          <input
-            type="text"
-            name="name"
-            value={eventData.name}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Description:
-          <input
-            type="text"
-            name="description"
-            value={eventData.description}
-            onChange={handleChange}
-          />
-        </label>
-        <label>
-          Image URL:
-          <input
-            type="text"
-            name="imageUrl"
-            value={eventData.imageUrl}
-            onChange={handleChange}
-          />
-        </label>
+        {/* ... Form inputs ... */}
         <button type="submit">Add Event</button>
       </form>
-
-      {/* Add Event Form */}
-      <AddEventForm />
 
       {/* Edit Event Form */}
       {selectedEvent && (
         <EditEventForm
           eventId={selectedEvent._id}
+          eventData={eventData}
           setEventData={setEventData}
+          handleEditEvent={handleEditEvent} // Pass handleEditEvent as a prop
         />
       )}
 
       {/* Cancel Event Form */}
-      {selectedEvent && <CancelEventForm eventId={selectedEvent._id} />}
+      {selectedEvent && (
+        <CancelEventForm
+          eventId={selectedEvent._id}
+          handleCancelEvent={handleCancelEvent} // Pass handleCancelEvent as a prop
+        />
+      )}
     </div>
   );
 };

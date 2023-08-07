@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React from "react";
 
-const EditEventForm = ({ eventId, setEventData }) => {
-  const [eventData, setEventDataState] = useState({
-    // Changed variable name to setEventDataState
-    name: "",
-    description: "",
-    imageUrl: "",
-  });
-
+const EditEventForm = ({
+  eventId,
+  eventData,
+  setEventData,
+  handleEditEvent,
+}) => {
   const handleChange = (e) => {
     setEventData({
       ...eventData,
@@ -16,24 +13,15 @@ const EditEventForm = ({ eventId, setEventData }) => {
     });
   };
 
-  const handleEditEvent = (e) => {
+  const handleEditSubmit = (e) => {
     e.preventDefault();
-
-    // Send a PUT request to edit an existing event
-    axios
-      .put(`/api/edit-event/${eventId}`, eventData)
-      .then((response) => {
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.error("Error editing event:", error);
-      });
+    handleEditEvent(e, eventId);
   };
 
   return (
     <div>
       <h2>Edit Event</h2>
-      <form onSubmit={(e) => handleEditEvent(e, eventId)}>
+      <form onSubmit={handleEditSubmit}>
         <label>
           Event Name:
           <input

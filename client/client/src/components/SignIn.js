@@ -18,8 +18,7 @@ const SignIn = ({ handleSignIn }) => {
   const handleSignInSubmit = (e) => {
     e.preventDefault();
     handleSignIn(credentials); // Call the parent component's handleSignIn function
-    // For simplicity, assume the handleSignIn function handles API calls and login success/failure
-    setLoginSuccess(true); // Set loginSuccess to true (you can handle this based on API response)
+    setLoginSuccess(true); // Set loginSuccess to true
   };
 
   return (

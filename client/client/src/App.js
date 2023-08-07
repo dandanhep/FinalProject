@@ -50,34 +50,15 @@ function App() {
       });
   }, []);
 
-  const handleSignInClick = () => {
-    setIsSignInVisible(true);
-  };
+  // Adding the three events to the upcomingEvents state
+  useEffect(() => {
+    setUpcomingEvents([event1, event2, event3]);
+  }, []);
 
   const handleSignOutClick = () => {
     localStorage.removeItem("authToken");
     setIsSignInVisible(true);
   };
-
-  const handleSignIn = (credentials) => {
-    // Send a POST request to the backend to handle sign-in
-    axios
-      .post("/auth/login", credentials)
-      .then((response) => {
-        console.log(response.data.token);
-        // Handle successful sign-in
-        localStorage.setItem("authToken", response.data.token);
-        setIsSignInVisible(false);
-      })
-      .catch((error) => {
-        console.error("Error signing in:", error);
-      });
-  };
-
-  // Adding the three events to the upcomingEvents state
-  useEffect(() => {
-    setUpcomingEvents([event1, event2, event3]);
-  }, []);
 
   return (
     <div className="landing-page">
