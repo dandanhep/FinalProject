@@ -60,6 +60,22 @@ function App() {
     setIsSignInVisible(true);
   };
 
+  // Define the handleSignIn function
+  const handleSignIn = (credentials) => {
+    // You can use axios or any other method to send a POST request to your server for authentication
+    axios
+      .post("/auth/login", credentials)
+      .then((response) => {
+        // Handle successful authentication, e.g., store the token in localStorage
+        const authToken = response.data.token;
+        localStorage.setItem("authToken", authToken);
+        setIsSignInVisible(false); // Hide the sign-in form after successful login
+      })
+      .catch((error) => {
+        console.error("Error signing in:", error);
+      });
+  };
+
   return (
     <div className="landing-page">
       <header className="menu-bar">
@@ -104,7 +120,7 @@ function App() {
       </section>
 
       {/* Render the SignIn component if isSignInVisible is true */}
-      {isSignInVisible && <SignIn />}
+      {isSignInVisible && <SignIn handleSignIn={handleSignIn} />}
 
       {/* Conditional rendering of AdminPanel */}
       {authToken && <AdminPanel />}

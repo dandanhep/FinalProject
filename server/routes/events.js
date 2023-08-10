@@ -89,7 +89,10 @@ router.delete("/cancel-event/:eventId", authenticateUser, async (req, res) => {
 router.get("/upcoming-events", async (req, res) => {
   try {
     // Find and return the upcoming events from the database
-    const upcomingEvents = await Event.find().limit(3).exec();
+    const upcomingEvents = await Event.find({ startDate: { $gte: new Date() } })
+      .sort("startDate")
+      .limit(3);
+
     res.json(upcomingEvents);
   } catch (error) {
     res.status(500).json({ message: "Error fetching upcoming events" });

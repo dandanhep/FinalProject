@@ -41,5 +41,6 @@
       "<rootDir>/src",
       "<rootDir>/test"
     ]
-  }
+  },
+  "proxy": "http://localhost:5001"
 }

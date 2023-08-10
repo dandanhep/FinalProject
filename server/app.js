@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const authRoutes = require("./routes/auth");
 const authenticateUser = require("./middleware");
+const cors = require("cors"); // Import the cors middleware
 
 const DB_CONNECTION_STRING =
   "mongodb+srv://conferenceapp.yytqua6.mongodb.net/<conference_app>";
@@ -26,6 +27,9 @@ mongoose
 // Middleware
 app.use(express.json());
 
+// Use the cors middleware
+app.use(cors());
+
 // Routes
 app.use("/auth", authRoutes);
 
@@ -33,6 +37,16 @@ app.use("/auth", authRoutes);
 app.get("/protected-route", authenticateUser, (req, res) => {
   // This route will only be accessible if the user is authenticated with a valid token
   res.json({ message: "Protected route accessed successfully" });
+});
+
+// Endpoint to fetch upcoming events
+app.get("/api/upcoming-events", (req, res) => {
+  // Fetch upcoming events from your database
+  // Send the list of events as a response
+  const upcomingEvents = [
+    // ... list of upcoming events ...
+  ];
+  res.json(upcomingEvents);
 });
 
 // Start the server
