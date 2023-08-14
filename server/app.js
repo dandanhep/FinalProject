@@ -41,12 +41,15 @@ app.get("/protected-route", authenticateUser, (req, res) => {
 
 // Endpoint to fetch upcoming events
 app.get("/api/upcoming-events", (req, res) => {
-  // Fetch upcoming events from your database
-  // Send the list of events as a response
-  const upcomingEvents = [
-    // ... list of upcoming events ...
-  ];
-  res.json(upcomingEvents);
+  // Use the mongoose model to query the database and retrieve upcoming events
+  Event.find() // Assuming "Event" is your mongoose model for events
+    .then((upcomingEvents) => {
+      res.json(upcomingEvents); // Send the retrieved events as the response
+    })
+    .catch((error) => {
+      console.error("Error fetching upcoming events:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
 });
 
 // Start the server

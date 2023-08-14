@@ -3,6 +3,7 @@ import "./App.css";
 import EventCard from "./components/EventCard";
 import axios from "axios";
 import SignIn from "./components/SignIn";
+import Register from "./components/Register";
 import AdminPanel from "./components/AdminPanel";
 import sectionImage from "./images/Event-5.jpeg";
 
@@ -76,6 +77,22 @@ function App() {
       });
   };
 
+  const [isRegisterVisible, setIsRegisterVisible] = useState(false);
+
+  const handleRegister = (registrationData) => {
+    // Send a POST request to register the user
+    axios
+      .post("/auth/register", registrationData)
+      .then((response) => {
+        // Handle successful registration
+        console.log(response.data.message);
+        setIsRegisterVisible(false); // Hide the registration form after successful registration
+      })
+      .catch((error) => {
+        console.error("Error registering user:", error);
+      });
+  };
+
   return (
     <div className="landing-page">
       <header className="menu-bar">
@@ -121,6 +138,7 @@ function App() {
 
       {/* Render the SignIn component if isSignInVisible is true */}
       {isSignInVisible && <SignIn handleSignIn={handleSignIn} />}
+      {isRegisterVisible && <Register handleRegister={handleRegister} />}
 
       {/* Conditional rendering of AdminPanel */}
       {authToken && <AdminPanel />}
