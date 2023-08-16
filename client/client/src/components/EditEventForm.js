@@ -1,21 +1,24 @@
 import React from "react";
 
 const EditEventForm = ({
-  eventId,
-  eventData,
-  setEventData,
-  handleEditEvent,
+  eventId, // The ID of the event being edited
+  eventData, // Current data of the event being edited
+  setEventData, // Function to update the event data state
+  handleEditEvent, // Function to handle the edit event submission
 }) => {
+  // Handle input changes for the edit event form
   const handleChange = (e) => {
+    // Update the eventData state with the new value
     setEventData({
       ...eventData,
       [e.target.name]: e.target.value,
     });
   };
 
+  // Handle edit event form submission
   const handleEditSubmit = (e) => {
-    e.preventDefault();
-    handleEditEvent(e, eventId);
+    e.preventDefault(); // Prevent default form submission behavior
+    handleEditEvent(e, eventId); // Call the parent component's handleEditEvent function
   };
 
   return (

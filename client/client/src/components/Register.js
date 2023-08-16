@@ -1,25 +1,29 @@
 import React, { useState } from "react";
 
 const Register = ({ handleRegister }) => {
+  // State for storing user's registration credentials
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
 
+  // Handle input changes for registration form
   const handleChange = (e) => {
+    // Update the corresponding field in credentials state
     setCredentials({
       ...credentials,
       [e.target.name]: e.target.value,
     });
   };
 
+  // Handle registration form submission
   const handleRegisterSubmit = (e) => {
-    e.preventDefault();
-    handleRegister(credentials);
+    e.preventDefault(); // Prevent default form submission behavior
+    handleRegister(credentials); // Call the parent component's handleRegister function
   };
 
   return (
-    <div>
+    <div className="register-form">
       <h2>Register</h2>
       <form onSubmit={handleRegisterSubmit}>
         <label>
