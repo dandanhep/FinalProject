@@ -106,12 +106,20 @@ function App() {
           </button>
         ) : (
           // If the user is not authenticated, show the "Sign In" button
-          <button
-            className="sign-in-btn"
-            onClick={() => setIsSignInVisible(true)}
-          >
-            Sign In
-          </button>
+          <div>
+            <button
+              className="sign-in-btn"
+              onClick={() => setIsSignInVisible(true)}
+            >
+              Sign In
+            </button>
+            <button
+              className="sign-in-btn"
+              onClick={() => setIsRegisterVisible(true)}
+            >
+              Register
+            </button>
+          </div>
         )}
       </header>
 
