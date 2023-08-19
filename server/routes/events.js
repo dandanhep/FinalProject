@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Event = require("../models/event");
+const Event = require("../models/user");
 const authenticateUser = require("../middleware");
 
 // Protected route for adding a new event (admin only)
