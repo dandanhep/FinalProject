@@ -6,7 +6,7 @@ import SignIn from "./components/SignIn";
 import Register from "./components/Register";
 import AdminPanel from "./components/AdminPanel";
 import sectionImage from "./images/Event-5.jpeg";
-
+/* */
 const event1 = {
   _id: 1,
   name: "Rhythm Fusion",
@@ -41,8 +41,14 @@ function App() {
 
   useEffect(() => {
     // Fetch upcoming events from the backend
+    const authToken = localStorage.getItem("authToken");
+
     axios
-      .get("/api/upcoming-events")
+      .get("/events/upcoming-events", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         setUpcomingEvents(response.data);
       })

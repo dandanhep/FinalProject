@@ -2,15 +2,21 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const authRoutes = require("./routes/auth");
+const eventRoutes = require("./routes/events");
 const authenticateUser = require("./middleware");
-
+//const crypto = require("crypto");
 const cors = require("cors"); // Import the cors middleware
-const User = require("./models/user");
+//const User = require("./models/user");
+const Event = require("./models/event");
+//const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 const DB_CONNECTION_STRING =
   "mongodb+srv://conferenceapp.yytqua6.mongodb.net/<conference_app>";
 const DB_USERNAME = "dhepburn97";
 const DB_PASSWORD = "7HTyqOzzZowNAXL6";
+/*
+const secretKey = crypto.randomBytes(32).toString("hex"); // Generate secret key
+console.log("Generated Secret Key:", secretKey);*/
 
 const options = {
   useNewUrlParser: true,
@@ -34,6 +40,7 @@ app.use(cors());
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/events", eventRoutes);
 
 // Protected route example
 app.get("/protected-route", authenticateUser, (req, res) => {
@@ -44,7 +51,7 @@ app.get("/protected-route", authenticateUser, (req, res) => {
 // Endpoint to fetch upcoming events
 app.get("/api/upcoming-events", (req, res) => {
   // Use the mongoose model to query the database and retrieve upcoming events
-  User.find()
+  Event.find({ date: { $gte: new Date() } })
     .then((upcomingEvents) => {
       res.json(upcomingEvents); // Send the retrieved events as the response
     })
@@ -56,14 +63,13 @@ app.get("/api/upcoming-events", (req, res) => {
 
 app.post("/api/add-event", authenticateUser, async (req, res) => {
   try {
-    // Assuming you have a schema/model for events (e.g., Event)
-    const { eventName, eventDate, eventLocation } = req.body;
+    const { name, description, imageUrl } = req.body;
 
     // Create a new event object using the Event model
     const newEvent = new Event({
-      name: eventName,
-      date: eventDate,
-      location: eventLocation,
+      name,
+      description,
+      imageUrl,
     });
 
     // Save the new event to the database

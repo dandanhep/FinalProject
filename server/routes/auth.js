@@ -4,9 +4,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
+require("dotenv").config();
+
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
+
 // Registration route
 router.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
 
   try {
     // Check if the username already exists
@@ -19,7 +23,11 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
-    const user = new User({ username, password: hashedPassword });
+    const user = new User({
+      username,
+      password: hashedPassword,
+      isAdmin: role === "admin",
+    });
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
@@ -46,7 +54,7 @@ router.post("/login", async (req, res) => {
     }
 
     // Generate a JWT token to use for authentication
-    const token = jwt.sign({ userId: user._id }, "your-secret-key", {
+    const token = jwt.sign({ userId: user._id }, jwtSecretKey, {
       expiresIn: "24h",
     });
 

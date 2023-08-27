@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
+const User = require("./models/user");
 
-const authenticateUser = (req, res, next) => {
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+const authenticateUser = async (req, res, next) => {
   const token = req.header("Authorization");
 
   if (!token) {
@@ -9,11 +12,19 @@ const authenticateUser = (req, res, next) => {
 
   try {
     // Verify the JWT token
-    const decodedToken = jwt.verify(
-      token,
-      "3ahgBMAUhHW0D4yZSklhQHN8jbq3DOGMaQvUHEPvH6x1mkZMZFzjANo4dkNUpwajZNZoLHs9yDtrVyOTDSiBd8GOqu0HRBbsGt0DdEThhGZAbnrjkZUndZfhij0wklGqCOdr9oHFz1TH90EhQzvQnj5JlVRFuieiSBY9TtVVrVcluf4931KXE6fPkPRA1mCUuyCebFZdtt4cQD4TdtW2BAGpMey4j1GvOsJfvqOybEpl9aSLM1eR2xk2gPxcOoUo18cTgdDXhvXfo9JGKOXmzB8r6ztdWvsbuvOyMcZ6WviovSXxwDrFFTkaAoDoA4M"
-    );
-    req.userId = decodedToken.userId;
+    const decodedToken = jwt.verify(token, jwtSecretKey);
+    req.user = decodedToken; // Store the decoded user information in the request
+
+    // Check if the user is an admin
+    const user = await User.findById(decodedToken.userId);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    if (!user.isAdmin) {
+      return res.status(403).json({ message: "Permission denied" });
+    }
+
     next();
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });

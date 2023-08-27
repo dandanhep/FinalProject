@@ -15,7 +15,7 @@ const AdminPanel = () => {
   useEffect(() => {
     // Fetch upcoming events from the backend
     axios
-      .get("/api/upcoming-events")
+      .get("/upcoming-events")
       .then((response) => {
         setUpcomingEvents(response.data);
       })
@@ -32,9 +32,15 @@ const AdminPanel = () => {
   const handleAddEvent = (e) => {
     e.preventDefault();
 
+    const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
+
     // Send a POST request to add a new event
     axios
-      .post("/api/add-event", eventData)
+      .post("/events/add-event", eventData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
         // Clear the form after successful addition
@@ -52,9 +58,15 @@ const AdminPanel = () => {
   const handleEditEvent = (e, eventId) => {
     e.preventDefault();
 
+    const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
+
     // Send a PUT request to edit an existing event
     axios
-      .put(`/api/edit-event/${eventId}`, eventData)
+      .put(`/edit-event/${eventId}`, eventData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
       })
@@ -63,12 +75,15 @@ const AdminPanel = () => {
       });
   };
 
-  const handleCancelEvent = (e, eventId) => {
-    e.preventDefault();
+  const handleCancelEvent = (eventId) => {
+    const authToken = localStorage.getItem("authToken");
 
-    // Send a DELETE request to cancel an existing event
     axios
-      .delete(`/api/cancel-event/${eventId}`)
+      .delete(`/cancel-event/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
       })
@@ -97,7 +112,7 @@ const AdminPanel = () => {
               <button onClick={() => handleEventSelection(event)}>
                 Edit Event
               </button>
-              <button onClick={() => handleEventSelection(event)}>
+              <button onClick={() => handleCancelEvent(event._id)}>
                 Cancel Event
               </button>
             </li>

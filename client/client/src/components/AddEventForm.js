@@ -18,9 +18,16 @@ const AddEventForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Retrieve the authentication token from localStorage
+    const authToken = localStorage.getItem("authToken");
+
     // Send a POST request to add a new event
     axios
-      .post("/api/add-event", eventData)
+      .post("/api/add-event", eventData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
         // Clear the form after successful addition
