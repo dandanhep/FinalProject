@@ -40,15 +40,8 @@ function App() {
   const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
 
   useEffect(() => {
-    // Fetch upcoming events from the backend
-    const authToken = localStorage.getItem("authToken");
-
     axios
-      .get("/events/upcoming-events", {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
+      .get("/api/upcoming-events")
       .then((response) => {
         setUpcomingEvents(response.data);
       })
@@ -134,6 +127,20 @@ function App() {
         {upcomingEvents.map((event) => (
           <EventCard key={event._id} event={event} />
         ))}
+
+        {/* Display the upcoming events as a list */}
+        <div className="upcoming-events">
+          <h2>Upcoming Events</h2>
+          <ul>
+            {upcomingEvents.map((event) => (
+              <li key={event._id}>
+                <h3>{event.name}</h3>
+                <p>{event.description}</p>
+                <img src={event.imageUrl} alt={event.name} />
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <section className="section-with-picture">

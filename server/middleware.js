@@ -25,6 +25,7 @@ const authenticateUser = async (req, res, next) => {
       return res.status(403).json({ message: "Permission denied" });
     }
 
+    // If user is an admin, proceed to the next middleware/route handler
     next();
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });

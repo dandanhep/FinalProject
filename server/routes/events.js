@@ -106,14 +106,10 @@ router.delete(
 // Fetch upcoming events
 router.get("/upcoming-events", async (req, res) => {
   try {
-    // Find and return the upcoming events from the database
-    const upcomingEvents = await Event.find({ startDate: { $gte: new Date() } })
-      .sort("startDate")
-      .limit(3);
-
+    const upcomingEvents = await Event.find({ date: { $gte: new Date() } });
     res.json(upcomingEvents);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching upcoming events" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

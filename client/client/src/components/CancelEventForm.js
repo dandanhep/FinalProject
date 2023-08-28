@@ -3,7 +3,7 @@ import React from "react";
 const CancelEventForm = ({ eventId, handleCancelEvent }) => {
   const handleCancelSubmit = (e) => {
     e.preventDefault();
-    handleCancelEvent(e, eventId);
+    handleCancelEvent(eventId);
   };
 
   return (

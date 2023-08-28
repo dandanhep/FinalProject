@@ -1,20 +1,14 @@
 import axios from "axios";
 
-// Function to get the token from local storage
-const getToken = () => {
-  return localStorage.getItem("authToken"); // Adjust this to match your token key
-};
-
 const instance = axios.create({
-  baseURL: "http://localhost:5001", // Adjust the URL to match your backend server
+  baseURL: "http://localhost:5001",
 });
 
-// Add an interceptor to set the Authorization header with the token for protected routes
 instance.interceptors.request.use(
   (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const authToken = localStorage.getItem("authToken");
+    if (authToken) {
+      config.headers.Authorization = `Bearer ${authToken}`;
     }
     return config;
   },

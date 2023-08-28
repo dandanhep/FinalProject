@@ -20,16 +20,21 @@ const SignIn = ({ handleSignIn }) => {
   };
 
   // Handle form submission
-  const handleSignInSubmit = (e) => {
+  const handleSignInSubmit = async (e) => {
     e.preventDefault();
-    handleSignIn(credentials); // Call the parent component's handleSignIn function
-    setLoginSuccess(true); // Set loginSuccess to true
+    const success = await handleSignIn(credentials);
+    setLoginSuccess(success);
   };
 
   return (
     <div className="sign-in-form">
       <h2>Sign In</h2>
-      {loginSuccess && <p>Login successful!</p>}
+      {loginSuccess && (
+        <p>
+          Login successful!
+          {credentials.username === "admin" && <span> You are an admin.</span>}
+        </p>
+      )}
       <form onSubmit={handleSignInSubmit}>
         <label>
           Username:

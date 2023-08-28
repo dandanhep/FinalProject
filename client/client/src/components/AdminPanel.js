@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+//import axios from "axios";
 import EditEventForm from "./EditEventForm";
 import CancelEventForm from "./CancelEventForm";
+import api from "./api";
 
 const AdminPanel = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -14,8 +15,8 @@ const AdminPanel = () => {
 
   useEffect(() => {
     // Fetch upcoming events from the backend
-    axios
-      .get("/upcoming-events")
+    api
+      .get("/api/upcoming-events")
       .then((response) => {
         setUpcomingEvents(response.data);
       })
@@ -32,17 +33,15 @@ const AdminPanel = () => {
   const handleAddEvent = (e) => {
     e.preventDefault();
 
-    const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
+    //const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
 
     // Send a POST request to add a new event
-    axios
-      .post("/events/add-event", eventData, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
+    api
+      .post("/api/add-event", eventData) // Send the eventData in the POST request
       .then((response) => {
         console.log(response.data.message);
+        // Update the upcomingEvents state with the new event
+        setUpcomingEvents([...upcomingEvents, eventData]);
         // Clear the form after successful addition
         setEventData({
           name: "",
@@ -58,15 +57,11 @@ const AdminPanel = () => {
   const handleEditEvent = (e, eventId) => {
     e.preventDefault();
 
-    const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
+    //const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
 
     // Send a PUT request to edit an existing event
-    axios
-      .put(`/edit-event/${eventId}`, eventData, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
+    api
+      .put(`/edit-event/${eventId}`, eventData)
       .then((response) => {
         console.log(response.data.message);
       })
@@ -76,14 +71,10 @@ const AdminPanel = () => {
   };
 
   const handleCancelEvent = (eventId) => {
-    const authToken = localStorage.getItem("authToken");
+    //const authToken = localStorage.getItem("authToken");
 
-    axios
-      .delete(`/cancel-event/${eventId}`, {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
+    api
+      .delete(`/cancel-event/${eventId}`)
       .then((response) => {
         console.log(response.data.message);
       })

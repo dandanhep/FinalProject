@@ -19,15 +19,17 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Username already exists" });
     }
 
-    // Hash the password before saving to the database
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create a new user
+    // Create a new user with isAdmin flag based on role
     const user = new User({
       username,
-      password: hashedPassword,
+      password,
       isAdmin: role === "admin",
     });
+
+    // Hash the password before saving to the database
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
+
     await user.save();
 
     res.status(201).json({ message: "User registered successfully" });
@@ -54,9 +56,13 @@ router.post("/login", async (req, res) => {
     }
 
     // Generate a JWT token to use for authentication
-    const token = jwt.sign({ userId: user._id }, jwtSecretKey, {
-      expiresIn: "24h",
-    });
+    const token = jwt.sign(
+      { userId: user._id, isAdmin: user.isAdmin },
+      jwtSecretKey,
+      {
+        expiresIn: "24h",
+      }
+    );
 
     res.status(200).json({ token });
   } catch (error) {

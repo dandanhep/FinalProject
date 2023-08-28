@@ -5,6 +5,7 @@ const Register = ({ handleRegister }) => {
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
+    role: "user", // Default role is "user"
   });
 
   // Handle input changes for registration form
@@ -43,6 +44,13 @@ const Register = ({ handleRegister }) => {
             value={credentials.password}
             onChange={handleChange}
           />
+        </label>
+        <label>
+          Role:
+          <select name="role" value={credentials.role} onChange={handleChange}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
         </label>
         <button type="submit">Register</button>
       </form>
