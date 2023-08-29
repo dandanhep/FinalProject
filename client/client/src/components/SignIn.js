@@ -9,6 +9,7 @@ const SignIn = ({ handleSignIn }) => {
 
   // State for tracking successful login
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false); // Initialize isAdmin state
 
   // Handle input changes
   const handleChange = (e) => {
@@ -22,8 +23,9 @@ const SignIn = ({ handleSignIn }) => {
   // Handle form submission
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
-    const success = await handleSignIn(credentials);
+    const { success, isAdmin } = await handleSignIn(credentials); // Receive isAdmin flag from handleSignIn
     setLoginSuccess(success);
+    setIsAdmin(isAdmin); // Set the isAdmin state
   };
 
   return (
@@ -32,7 +34,7 @@ const SignIn = ({ handleSignIn }) => {
       {loginSuccess && (
         <p>
           Login successful!
-          {credentials.username === "admin" && <span> You are an admin.</span>}
+          {isAdmin && <span> You are an admin.</span>}
         </p>
       )}
       <form onSubmit={handleSignInSubmit}>

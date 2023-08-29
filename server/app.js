@@ -44,6 +44,7 @@ app.use("/events", eventRoutes);
 
 // Protected route example
 app.get("/protected-route", authenticateUser, (req, res) => {
+  console.log("Authenticated User:", req.user); //test
   // This route will only be accessible if the user is authenticated with a valid token
   res.json({ message: "Protected route accessed successfully" });
 });

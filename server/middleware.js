@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken");
 const User = require("./models/user");
+require("dotenv").config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 const authenticateUser = async (req, res, next) => {
   const token = req.header("Authorization");
+  console.log("Token:", token); // testing
 
   if (!token) {
     return res.status(401).json({ message: "Authorization token not found" });
@@ -13,6 +15,7 @@ const authenticateUser = async (req, res, next) => {
   try {
     // Verify the JWT token
     const decodedToken = jwt.verify(token, jwtSecretKey);
+    console.log("Decoded Token:", decodedToken); // Log the decoded token test
     req.user = decodedToken; // Store the decoded user information in the request
 
     // Check if the user is an admin

@@ -56,15 +56,17 @@ router.post("/login", async (req, res) => {
     }
 
     // Generate a JWT token to use for authentication
-    const token = jwt.sign(
-      { userId: user._id, isAdmin: user.isAdmin },
-      jwtSecretKey,
-      {
-        expiresIn: "24h",
-      }
-    );
+    const tokenPayload = {
+      userId: user._id,
+      isAdmin: user.isAdmin, // Set the isAdmin flag from the user data
+    };
 
-    res.status(200).json({ token });
+    const token = jwt.sign(tokenPayload, jwtSecretKey, {
+      expiresIn: "24h",
+    });
+
+    // Send the token and isAdmin flag in the response
+    res.status(200).json({ token, isAdmin: user.isAdmin });
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
   }

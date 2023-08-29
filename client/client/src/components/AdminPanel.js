@@ -11,10 +11,11 @@ const AdminPanel = () => {
     description: "",
     imageUrl: "",
   });
-  const [upcomingEvents, setUpcomingEvents] = useState([]); // Define the state for upcomingEvents
+  const authToken = localStorage.getItem("authToken");
+  const isAdmin = localStorage.getItem("isAdmin") === "true"; // Convert to boolean
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
-    // Fetch upcoming events from the backend
     api
       .get("/api/upcoming-events")
       .then((response) => {
@@ -25,24 +26,17 @@ const AdminPanel = () => {
       });
   }, []);
 
-  // Function to handle selecting an event for editing or canceling
-  const handleEventSelection = (event) => {
-    setSelectedEvent(event._id); // Set selectedEvent with the event ID
+  const handleEventSelection = (eventId) => {
+    setSelectedEvent(eventId);
   };
 
   const handleAddEvent = (e) => {
     e.preventDefault();
-
-    //const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
-
-    // Send a POST request to add a new event
     api
-      .post("/api/add-event", eventData) // Send the eventData in the POST request
+      .post("/api/add-event", eventData)
       .then((response) => {
         console.log(response.data.message);
-        // Update the upcomingEvents state with the new event
-        setUpcomingEvents([...upcomingEvents, eventData]);
-        // Clear the form after successful addition
+        setUpcomingEvents([...upcomingEvents, response.data.event]);
         setEventData({
           name: "",
           description: "",
@@ -56,10 +50,6 @@ const AdminPanel = () => {
 
   const handleEditEvent = (e, eventId) => {
     e.preventDefault();
-
-    //const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
-
-    // Send a PUT request to edit an existing event
     api
       .put(`/edit-event/${eventId}`, eventData)
       .then((response) => {
@@ -71,8 +61,6 @@ const AdminPanel = () => {
   };
 
   const handleCancelEvent = (eventId) => {
-    //const authToken = localStorage.getItem("authToken");
-
     api
       .delete(`/cancel-event/${eventId}`)
       .then((response) => {
@@ -84,28 +72,71 @@ const AdminPanel = () => {
   };
 
   return (
-    <div>
-      <h2>Add Event</h2>
-      <form onSubmit={handleAddEvent}>
-        {/* ... Form inputs ... */}
-        <button type="submit">Add Event</button>
-      </form>
+    <div className="admin-panel">
+      {/* Add Event Form */}
+      <div className="add-event-form">
+        <h2>Add Event</h2>
+        <form onSubmit={handleAddEvent}>
+          <div>
+            <label htmlFor="name">Event Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={eventData.name}
+              onChange={(e) =>
+                setEventData({ ...eventData, name: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="description">Event Description</label>
+            <textarea
+              id="description"
+              name="description"
+              value={eventData.description}
+              onChange={(e) =>
+                setEventData({ ...eventData, description: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="imageUrl">Image URL</label>
+            <input
+              type="text"
+              id="imageUrl"
+              name="imageUrl"
+              value={eventData.imageUrl}
+              onChange={(e) =>
+                setEventData({ ...eventData, imageUrl: e.target.value })
+              }
+              required
+            />
+          </div>
+          <button type="submit">Add Event</button>
+        </form>
+      </div>
 
       {/* Edit Event Form */}
       <div>
         <h2>Events List</h2>
         <ul>
-          {/* Map over the events and display buttons */}
           {upcomingEvents.map((event) => (
             <li key={event._id}>
               <h3>{event.name}</h3>
               <p>{event.description}</p>
-              <button onClick={() => handleEventSelection(event)}>
-                Edit Event
-              </button>
-              <button onClick={() => handleCancelEvent(event._id)}>
-                Cancel Event
-              </button>
+              {isAdmin === "true" && authToken && (
+                <div>
+                  <button onClick={() => handleEventSelection(event._id)}>
+                    Edit Event
+                  </button>
+                  <button onClick={() => handleCancelEvent(event._id)}>
+                    Cancel Event
+                  </button>
+                </div>
+              )}
             </li>
           ))}
         </ul>
@@ -114,18 +145,18 @@ const AdminPanel = () => {
       {/* Edit Event Form */}
       {selectedEvent && (
         <EditEventForm
-          eventId={selectedEvent._id}
+          eventId={selectedEvent}
           eventData={eventData}
           setEventData={setEventData}
-          handleEditEvent={handleEditEvent} // Pass handleEditEvent as a prop
+          handleEditEvent={handleEditEvent}
         />
       )}
 
       {/* Cancel Event Form */}
       {selectedEvent && (
         <CancelEventForm
-          eventId={selectedEvent._id}
-          handleCancelEvent={handleCancelEvent} // Pass handleCancelEvent as a prop
+          eventId={selectedEvent}
+          handleCancelEvent={handleCancelEvent}
         />
       )}
     </div>

@@ -19,9 +19,6 @@ const AddEventForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Retrieve the authentication token from localStorage
-    // const authToken = localStorage.getItem("authToken");
-
     // Send a POST request to add a new event
     api
       .post("/api/add-event", eventData)

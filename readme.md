@@ -4,6 +4,8 @@
 
 The Events4U app is a platform that allows users to browse upcoming events, sign in to their accounts, and view event details. Users can register and log in to their accounts securely. Admin users can also access an admin panel to add, edit, or cancel events. The landing page displays upcoming events, and users can click on the "Sign In" button to log in or view the event details. The admin panel is accessible only to authorized admin users, who can perform CRUD operations on events.
 
+use this login - username:admintest@gmail.com password: test
+
 ### b. Instructions for installing, testing, and running the app on a local machine:
 
 1. Prerequisites:
