@@ -39,6 +39,7 @@ API Keys: API keys (if any) are stored securely using environment variables or c
 
 Deploying both the back-end and front-end together on the same server is simpler and easier to manage, especially for smaller applications.
 Deployed here: https://vercel.com/dhepburn97-gmailcom/final-project
+https://final-project-one-tawny.vercel.app
 
 -
 
