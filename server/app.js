@@ -33,10 +33,13 @@ mongoose
   .catch((error) => console.error("Error connecting to MongoDB:", error));
 
 // Middleware
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
-
-// Use the cors middleware
-app.use(cors());
 
 // Routes
 app.use("/auth", authRoutes);

@@ -24,7 +24,7 @@ const EditEventForm = ({
   return (
     <div>
       <h2>Edit Event</h2>
-      <form onSubmit={handleEditSubmit}>
+      <form onSubmit={(e) => handleEditSubmit(e, eventId)}>
         <label>
           Event Name:
           <input

@@ -6,7 +6,7 @@ const authenticateUser = require("../middleware");
 // Middleware to check if the user is an admin
 const checkAdmin = (req, res, next) => {
   if (!req.user.isAdmin) {
-    return res.status(403).json({ message: "Permission denied" });
+    return res.status(403).json({ message: "Permission denied, not an admin" });
   }
   next();
 };
@@ -14,6 +14,9 @@ const checkAdmin = (req, res, next) => {
 // Protected route for adding a new event (admin only)
 router.post("/add-event", authenticateUser, checkAdmin, async (req, res) => {
   try {
+    // test: Extract the token from the request header
+    const token = req.header("Authorization");
+    console.log("Token received on the server:", token);
     // Check if the user is an admin
     if (!req.user.isAdmin) {
       return res.status(403).json({ message: "Permission denied" });
@@ -31,9 +34,12 @@ router.post("/add-event", authenticateUser, checkAdmin, async (req, res) => {
     // Save the new event to the database
     await newEvent.save();
 
-    res.json({ message: "Event added successfully" });
+    res
+      .status(201)
+      .json({ message: "Event added successfully", event: newEvent });
   } catch (error) {
-    res.status(500).json({ message: "Error adding the event" });
+    console.error("Error adding event:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -68,7 +74,8 @@ router.put(
 
       res.json({ message: "Event updated successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Error updating the event" });
+      console.error("Error updating event:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 );
@@ -98,7 +105,8 @@ router.delete(
 
       res.json({ message: "Event canceled successfully" });
     } catch (error) {
-      res.status(500).json({ message: "Error canceling the event" });
+      console.error("Error canceling event:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 );
@@ -109,6 +117,18 @@ router.get("/upcoming-events", async (req, res) => {
     const upcomingEvents = await Event.find({ date: { $gte: new Date() } });
     res.json(upcomingEvents);
   } catch (error) {
+    console.error("Error fetching upcoming events:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Fetch all events
+router.get("/fetch-events", async (req, res) => {
+  try {
+    const events = await Event.find();
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

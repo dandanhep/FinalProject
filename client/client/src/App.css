@@ -243,3 +243,35 @@ footer {
 .register-form button:hover {
   background-color: #218838;
 }
+/* Add styling for your event list */
+.event-list {
+  margin-top: 20px;
+}
+
+.event-list h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.event-list ul {
+  list-style: none;
+  padding: 0;
+}
+
+.event-list li {
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.event-list h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.event-list img {
+  max-width: 100%;
+  height: auto;
+}

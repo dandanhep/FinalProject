@@ -46,13 +46,13 @@ router.post("/login", async (req, res) => {
     // Check if the user exists in the database
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "User not found" });
     }
 
     // Compare the provided password with the hashed password in the database
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid password" });
     }
 
     // Generate a JWT token to use for authentication
@@ -64,6 +64,10 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(tokenPayload, jwtSecretKey, {
       expiresIn: "24h",
     });
+
+    // test: Decode and log the token payload for debugging purposes
+    const decodedToken = jwt.decode(token);
+    console.log("Decoded Token Payload:", decodedToken);
 
     // Send the token and isAdmin flag in the response
     res.status(200).json({ token, isAdmin: user.isAdmin });

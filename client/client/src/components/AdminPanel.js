@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-//import axios from "axios";
+import axios from "axios";
 import EditEventForm from "./EditEventForm";
 import CancelEventForm from "./CancelEventForm";
-import api from "./api";
+//import api from "./api";
 
 const AdminPanel = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -16,15 +16,20 @@ const AdminPanel = () => {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/api/upcoming-events")
+    // Include the Authorization header with the token
+    axios
+      .get("/api/upcoming-events", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         setUpcomingEvents(response.data);
       })
       .catch((error) => {
         console.error("Error fetching upcoming events:", error);
       });
-  }, []);
+  }, [authToken]);
 
   const handleEventSelection = (eventId) => {
     setSelectedEvent(eventId);
@@ -32,8 +37,17 @@ const AdminPanel = () => {
 
   const handleAddEvent = (e) => {
     e.preventDefault();
-    api
-      .post("/api/add-event", eventData)
+
+    // test: Output the token value to the console before sending the request
+    const authToken = localStorage.getItem("authToken");
+    console.log("Token being sent:", authToken);
+    // Including the Authorization header with the token
+    axios
+      .post("/api/add-event", eventData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
         setUpcomingEvents([...upcomingEvents, response.data.event]);
@@ -50,8 +64,13 @@ const AdminPanel = () => {
 
   const handleEditEvent = (e, eventId) => {
     e.preventDefault();
-    api
-      .put(`/edit-event/${eventId}`, eventData)
+    // Include the Authorization header with the token
+    axios
+      .put(`/edit-event/${eventId}`, eventData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
       })
@@ -61,8 +80,13 @@ const AdminPanel = () => {
   };
 
   const handleCancelEvent = (eventId) => {
-    api
-      .delete(`/cancel-event/${eventId}`)
+    // Include the Authorization header with the token
+    axios
+      .delete(`/cancel-event/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
       })

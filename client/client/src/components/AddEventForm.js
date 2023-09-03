@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-//import axios from "axios";
-import api from "./api";
+import axios from "axios";
+//import api from "./api";
 
 const AddEventForm = () => {
   const [eventData, setEventData] = useState({
@@ -19,9 +19,14 @@ const AddEventForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const authToken = localStorage.getItem("authToken");
     // Send a POST request to add a new event
-    api
-      .post("/api/add-event", eventData)
+    axios
+      .post("/api/add-event", eventData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         console.log(response.data.message);
         // Clear the form after successful addition

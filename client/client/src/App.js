@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import EventCard from "./components/EventCard";
+//import EventCard from "./components/EventCard";
 import axios from "axios";
 import SignIn from "./components/SignIn";
 import Register from "./components/Register";
 import AdminPanel from "./components/AdminPanel";
 import sectionImage from "./images/Event-5.jpeg";
+import EventList from "./components/EventList";
 
 function App() {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [isSignInVisible, setIsSignInVisible] = useState(false);
   const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
-  const isAdmin = localStorage.getItem("isAdmin");
+  const isAdmin = localStorage.getItem("isAdmin"); // get user isAdmin
+  //test login
+  console.log("authToken:", authToken);
+  console.log("isAdmin:", isAdmin);
 
   useEffect(() => {
     axios
@@ -96,10 +100,7 @@ function App() {
       </header>
 
       <section className="event-section">
-        {/* Map over the upcoming events and display EventCard for each event */}
-        {upcomingEvents.map((event) => (
-          <EventCard key={event._id} event={event} />
-        ))}
+        <EventList events={upcomingEvents} />
 
         {/* Display the upcoming events as a list */}
         <div className="upcoming-events">
@@ -134,7 +135,12 @@ function App() {
       {isAdmin === "true" && authToken && <AdminPanel />}
 
       {/* Render the SignIn component if isSignInVisible is true */}
-      {isSignInVisible && <SignIn handleSignIn={handleSignIn} />}
+      {isSignInVisible && (
+        <SignIn
+          handleSignIn={handleSignIn}
+          setIsRegisterVisible={setIsRegisterVisible}
+        />
+      )}
       {isRegisterVisible && <Register handleRegister={handleRegister} />}
 
       <footer>

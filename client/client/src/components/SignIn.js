@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SignIn = ({ handleSignIn }) => {
+const SignIn = ({ handleSignIn, setIsRegisterVisible }) => {
   // State for storing user's credentials
   const [credentials, setCredentials] = useState({
     username: "",
@@ -26,6 +26,7 @@ const SignIn = ({ handleSignIn }) => {
     const { success, isAdmin } = await handleSignIn(credentials); // Receive isAdmin flag from handleSignIn
     setLoginSuccess(success);
     setIsAdmin(isAdmin); // Set the isAdmin state
+    setIsRegisterVisible(false);
   };
 
   return (
