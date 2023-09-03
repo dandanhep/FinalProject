@@ -39,10 +39,11 @@ API Keys: API keys (if any) are stored securely using environment variables or c
 
 Deploying both the back-end and front-end together on the same server is simpler and easier to manage, especially for smaller applications.
 Deployed here: final-project-rblet1xqm-dhepburn97-gmailcom.vercel.app
-https://vercel.com/dhepburn97-gmailcom/final-project
-https://final-project-one-tawny.vercel.app
+https://vercel.com/new/success?developer-id=&external-id=&redirect-url=&branch=main&deploymentUrl=final-project-b4njjdazw-dhepburn97-gmailcom.vercel.app&projectName=final-project&s=https%3A%2F%2Fgithub.com%2Fdandanhep%2FFinalProject&gitOrgLimit=&hasTrialAvailable=1&totalProjects=1
 
--
+- i did deploy the project but it just says that i exceeded the hobby bandwith and without buying more it cant show- i have attached the successful deployment screenshot
+
+*
 
 ### System Architecture
 
