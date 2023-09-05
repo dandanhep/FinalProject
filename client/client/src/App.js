@@ -12,21 +12,25 @@ function App() {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [isSignInVisible, setIsSignInVisible] = useState(false);
   const authToken = localStorage.getItem("authToken"); // Get the authentication token from localStorage
-  const isAdmin = localStorage.getItem("isAdmin"); // get user isAdmin
+  const isAdmin = localStorage.getItem("isAdmin") === "true"; // get user isAdmin
   //test login
   console.log("authToken:", authToken);
   console.log("isAdmin:", isAdmin);
 
   useEffect(() => {
     axios
-      .get("/api/upcoming-events")
+      .get("/api/upcoming-events", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
       .then((response) => {
         setUpcomingEvents(response.data);
       })
       .catch((error) => {
         console.error("Error fetching upcoming events:", error);
       });
-  }, []);
+  }, [authToken]);
 
   const handleSignOutClick = () => {
     localStorage.removeItem("authToken");
@@ -132,7 +136,7 @@ function App() {
       </section>
 
       {/* Conditional rendering of AdminPanel */}
-      {isAdmin === "true" && authToken && <AdminPanel />}
+      {isAdmin && authToken && <AdminPanel upcomingEvents={upcomingEvents} />}
 
       {/* Render the SignIn component if isSignInVisible is true */}
       {isSignInVisible && (

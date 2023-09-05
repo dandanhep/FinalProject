@@ -59,20 +59,21 @@ router.put(
       const eventId = req.params.eventId;
 
       // Find the event by ID
-      const event = await Event.findById(eventId);
+      const event = await Event.findByIdAndUpdate(
+        eventId,
+        {
+          name,
+          description,
+          imageUrl,
+        },
+        { new: true }
+      );
+
       if (!event) {
         return res.status(404).json({ message: "Event not found" });
       }
 
-      // Update the event details
-      event.name = name;
-      event.description = description;
-      event.imageUrl = imageUrl;
-
-      // Save the updated event to the database
-      await event.save();
-
-      res.json({ message: "Event updated successfully" });
+      res.json({ message: "Event updated successfully", event });
     } catch (error) {
       console.error("Error updating event:", error);
       res.status(500).json({ error: "Internal Server Error" });
@@ -94,14 +95,12 @@ router.delete(
 
       const eventId = req.params.eventId;
 
-      // Find the event by ID
-      const event = await Event.findById(eventId);
-      if (!event) {
+      // Find the event by ID and delete it using deleteOne
+      const result = await Event.deleteOne({ _id: eventId });
+
+      if (result.deletedCount === 0) {
         return res.status(404).json({ message: "Event not found" });
       }
-
-      // Remove the event from the database
-      await event.remove();
 
       res.json({ message: "Event canceled successfully" });
     } catch (error) {

@@ -5,7 +5,7 @@ import CancelEventForm from "./CancelEventForm";
 //import api from "./api";
 
 const AdminPanel = () => {
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedEvent] = useState(null);
   const [eventData, setEventData] = useState({
     name: "",
     description: "",
@@ -14,6 +14,20 @@ const AdminPanel = () => {
   const authToken = localStorage.getItem("authToken");
   const isAdmin = localStorage.getItem("isAdmin") === "true"; // Convert to boolean
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  //const [isLoading, setIsLoading] = useState(true);
+  const [allEvents, setAllEvents] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/events/fetch-events")
+      .then((response) => {
+        console.log("All Events:", response.data);
+        setAllEvents(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching events:", error);
+      });
+  }, []);
 
   useEffect(() => {
     // Include the Authorization header with the token
@@ -24,6 +38,7 @@ const AdminPanel = () => {
         },
       })
       .then((response) => {
+        console.log("Upcoming Events:", response.data); // test- Log the data
         setUpcomingEvents(response.data);
       })
       .catch((error) => {
@@ -31,9 +46,9 @@ const AdminPanel = () => {
       });
   }, [authToken]);
 
-  const handleEventSelection = (eventId) => {
+  /*const handleEventSelection = (eventId) => {
     setSelectedEvent(eventId);
-  };
+  };*/
 
   const handleAddEvent = (e) => {
     e.preventDefault();
@@ -62,11 +77,11 @@ const AdminPanel = () => {
       });
   };
 
-  const handleEditEvent = (e, eventId) => {
-    e.preventDefault();
+  const handleEditEvent = (eventId) => {
+    const authToken = localStorage.getItem("authToken");
     // Include the Authorization header with the token
     axios
-      .put(`/edit-event/${eventId}`, eventData, {
+      .put(`/events/edit-event/${eventId}`, eventData, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -80,9 +95,10 @@ const AdminPanel = () => {
   };
 
   const handleCancelEvent = (eventId) => {
+    const authToken = localStorage.getItem("authToken");
     // Include the Authorization header with the token
     axios
-      .delete(`/cancel-event/${eventId}`, {
+      .delete(`/events/cancel-event/${eventId}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -143,28 +159,37 @@ const AdminPanel = () => {
         </form>
       </div>
 
-      {/* Edit Event Form */}
-      <div>
-        <h2>Events List</h2>
-        <ul>
-          {upcomingEvents.map((event) => (
-            <li key={event._id}>
-              <h3>{event.name}</h3>
-              <p>{event.description}</p>
-              {isAdmin === "true" && authToken && (
-                <div>
-                  <button onClick={() => handleEventSelection(event._id)}>
-                    Edit Event
-                  </button>
-                  <button onClick={() => handleCancelEvent(event._id)}>
-                    Cancel Event
-                  </button>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* Events List */}
+      {authToken && (
+        <div className="event-list">
+          <h2>All Events</h2>
+          <ul>
+            {allEvents.map((event) => (
+              <li key={event._id}>
+                <h3>{event.name}</h3>
+                <p>{event.description}</p>
+                <img src={event.imageUrl} alt={event.name} />
+                {isAdmin && (
+                  <div>
+                    <button
+                      className="custom-button"
+                      onClick={() => handleEditEvent(event._id)}
+                    >
+                      Edit Event
+                    </button>
+                    <button
+                      className="custom-button"
+                      onClick={() => handleCancelEvent(event._id)}
+                    >
+                      Cancel Event
+                    </button>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Edit Event Form */}
       {selectedEvent && (

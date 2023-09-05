@@ -17,8 +17,8 @@ function EventList() {
   }, []);
 
   return (
-    <div>
-      <h2>Events</h2>
+    <div className="event-list"> {/* Add a className for styling */}
+      <h2>Events List</h2> {/* Updated heading */}
       <ul>
         {events.map((event) => (
           <li key={event._id}>
