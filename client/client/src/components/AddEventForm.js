@@ -3,21 +3,26 @@ import axios from "axios";
 //import api from "./api";
 
 const AddEventForm = () => {
+  // Define a state to hold the event data
   const [eventData, setEventData] = useState({
     name: "",
     description: "",
     imageUrl: "",
+    date: "",
   });
 
+  // Handle changes in input fields
   const handleChange = (e) => {
+    // Update the eventData state with the new value while preserving other fields
     setEventData({
       ...eventData,
       [e.target.name]: e.target.value,
     });
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default form submission behavior
 
     const authToken = localStorage.getItem("authToken");
     // Send a POST request to add a new event
@@ -34,6 +39,7 @@ const AddEventForm = () => {
           name: "",
           description: "",
           imageUrl: "",
+          date: "",
         });
       })
       .catch((error) => {
@@ -69,6 +75,15 @@ const AddEventForm = () => {
             type="text"
             name="imageUrl"
             value={eventData.imageUrl}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Event Date:
+          <input
+            type="date"
+            name="date"
+            value={eventData.date}
             onChange={handleChange}
           />
         </label>

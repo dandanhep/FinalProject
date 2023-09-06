@@ -10,7 +10,10 @@ const AdminPanel = () => {
     name: "",
     description: "",
     imageUrl: "",
+    date: "",
   });
+
+  // Retrieve the authentication token and isAdmin status from local storage
   const authToken = localStorage.getItem("authToken");
   const isAdmin = localStorage.getItem("isAdmin") === "true"; // Convert to boolean
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -18,6 +21,7 @@ const AdminPanel = () => {
   const [allEvents, setAllEvents] = useState([]);
 
   useEffect(() => {
+    // Fetch all events from the backend when the component mounts
     axios
       .get("/events/fetch-events")
       .then((response) => {
@@ -28,7 +32,7 @@ const AdminPanel = () => {
         console.error("Error fetching events:", error);
       });
   }, []);
-
+  /*
   useEffect(() => {
     // Include the Authorization header with the token
     axios
@@ -45,18 +49,17 @@ const AdminPanel = () => {
         console.error("Error fetching upcoming events:", error);
       });
   }, [authToken]);
-
+*/
   /*const handleEventSelection = (eventId) => {
     setSelectedEvent(eventId);
   };*/
 
   const handleAddEvent = (e) => {
     e.preventDefault();
-
-    // test: Output the token value to the console before sending the request
+    // Retrieve the authentication token from local storage
     const authToken = localStorage.getItem("authToken");
-    console.log("Token being sent:", authToken);
     // Including the Authorization header with the token
+    // Send a POST request to add a new event with event data
     axios
       .post("/api/add-event", eventData, {
         headers: {
@@ -65,11 +68,14 @@ const AdminPanel = () => {
       })
       .then((response) => {
         console.log(response.data.message);
+        // Update the upcoming events list with the newly added event
         setUpcomingEvents([...upcomingEvents, response.data.event]);
+        // Clear the form fields after successful addition
         setEventData({
           name: "",
           description: "",
           imageUrl: "",
+          date: "",
         });
       })
       .catch((error) => {
@@ -78,8 +84,10 @@ const AdminPanel = () => {
   };
 
   const handleEditEvent = (eventId) => {
+    // Retrieve the authentication token from local storage
     const authToken = localStorage.getItem("authToken");
-    // Include the Authorization header with the token
+
+    // Send a PUT request to edit an event with event data
     axios
       .put(`/events/edit-event/${eventId}`, eventData, {
         headers: {
@@ -95,8 +103,9 @@ const AdminPanel = () => {
   };
 
   const handleCancelEvent = (eventId) => {
+    // Retrieve the authentication token from local storage
     const authToken = localStorage.getItem("authToken");
-    // Include the Authorization header with the token
+    // Send a DELETE request to cancel an event
     axios
       .delete(`/events/cancel-event/${eventId}`, {
         headers: {
@@ -155,6 +164,20 @@ const AdminPanel = () => {
               required
             />
           </div>
+          {/* The event date input field */}
+          <div>
+            <label htmlFor="eventDate">Event Date</label>
+            <input
+              type="date"
+              id="eventDate"
+              name="eventDate"
+              value={eventData.date}
+              onChange={(e) =>
+                setEventData({ ...eventData, date: e.target.value })
+              }
+              required
+            />
+          </div>
           <button type="submit">Add Event</button>
         </form>
       </div>
@@ -168,6 +191,7 @@ const AdminPanel = () => {
               <li key={event._id}>
                 <h3>{event.name}</h3>
                 <p>{event.description}</p>
+                <p>{event.date}</p>
                 <img src={event.imageUrl} alt={event.name} />
                 {isAdmin && (
                   <div>

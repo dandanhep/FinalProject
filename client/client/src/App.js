@@ -114,6 +114,7 @@ function App() {
               <li key={event._id}>
                 <h3>{event.name}</h3>
                 <p>{event.description}</p>
+                <p>{event.date}</p>
                 <img src={event.imageUrl} alt={event.name} />
               </li>
             ))}

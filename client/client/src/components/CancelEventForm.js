@@ -1,9 +1,11 @@
 import React from "react";
 
+// CancelEventForm is a functional component that takes two props: eventId and handleCancelEvent
 const CancelEventForm = ({ eventId, handleCancelEvent }) => {
+  // Handle form submission to cancel the event
   const handleCancelSubmit = (e) => {
-    e.preventDefault();
-    handleCancelEvent(eventId);
+    e.preventDefault(); // Prevent the default form submission behavior
+    handleCancelEvent(eventId); // Call the parent component's handleCancelEvent function with eventId
   };
 
   return (

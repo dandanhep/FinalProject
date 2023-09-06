@@ -51,7 +51,7 @@ app.get("/protected-route", authenticateUser, (req, res) => {
   // This route will only be accessible if the user is authenticated with a valid token
   res.json({ message: "Protected route accessed successfully" });
 });
-
+/*
 // Endpoint to fetch upcoming events
 app.get("/api/upcoming-events", (req, res) => {
   // Use the mongoose model to query the database and retrieve upcoming events
@@ -64,16 +64,17 @@ app.get("/api/upcoming-events", (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     });
 });
-
+*/
 app.post("/api/add-event", authenticateUser, async (req, res) => {
   try {
-    const { name, description, imageUrl } = req.body;
+    const { name, description, imageUrl, date } = req.body;
 
     // Create a new event object using the Event model
     const newEvent = new Event({
       name,
       description,
       imageUrl,
+      date,
     });
 
     // Save the new event to the database

@@ -22,13 +22,14 @@ router.post("/add-event", authenticateUser, checkAdmin, async (req, res) => {
       return res.status(403).json({ message: "Permission denied" });
     }
 
-    const { name, description, imageUrl } = req.body;
+    const { name, description, imageUrl, date } = req.body;
 
     // Create a new event using the Event model
     const newEvent = new Event({
       name,
       description,
       imageUrl,
+      date, // Include date in the event object
     });
 
     // Save the new event to the database
@@ -55,7 +56,7 @@ router.put(
         return res.status(403).json({ message: "Permission denied" });
       }
 
-      const { name, description, imageUrl } = req.body;
+      const { name, description, imageUrl, date } = req.body;
       const eventId = req.params.eventId;
 
       // Find the event by ID
@@ -65,6 +66,7 @@ router.put(
           name,
           description,
           imageUrl,
+          date,
         },
         { new: true }
       );
@@ -109,7 +111,7 @@ router.delete(
     }
   }
 );
-
+/*
 // Fetch upcoming events
 router.get("/upcoming-events", async (req, res) => {
   try {
@@ -120,7 +122,7 @@ router.get("/upcoming-events", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
+*/
 // Fetch all events
 router.get("/fetch-events", async (req, res) => {
   try {

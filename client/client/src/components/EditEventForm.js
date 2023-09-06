@@ -52,6 +52,15 @@ const EditEventForm = ({
             onChange={handleChange}
           />
         </label>
+        <label>
+          Event Date:
+          <input
+            type="date"
+            name="date"
+            value={eventData.date}
+            onChange={handleChange}
+          />
+        </label>
         <button type="submit">Save Changes</button>
       </form>
     </div>
